@@ -122,11 +122,14 @@
   }
 }
 
-@layer utilities {
+@layer components {
   .gradient {
     @apply bg-gradient-to-br from-gray-500 via-gray-200 to-white;
   }
+}
+
+@layer utilities {
   .gradient-title {
-    @apply gradient text-transparent bg-clip-text;
+    @apply text-transparent bg-clip-text;
   }
 }
