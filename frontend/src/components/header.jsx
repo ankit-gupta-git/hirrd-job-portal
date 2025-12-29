@@ -1,12 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignIn, UserButton } from "@clerk/clerk-react";
+import {
+  SignedIn,
+  SignedOut,
+  SignIn,
+  UserButton,
+  useUser, 
+} from "@clerk/clerk-react";
 import { Briefcase, PenBox, Heart } from "lucide-react";
 
 const Header = () => {
   const [showSignIn, setShowSignIn] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const { user } = useUser();
 
   // Open modal if URL has ?signIn=true
   useEffect(() => {
@@ -18,7 +25,7 @@ const Header = () => {
   // Centralized close handler
   const closeSignIn = () => {
     setShowSignIn(false);
-    setSearchParams({}); // ✅ clear query params
+    setSearchParams({}); // clear query params
   };
 
   // ESC key + scroll lock
@@ -53,7 +60,7 @@ const Header = () => {
               variant="outline"
               onClick={() => {
                 setShowSignIn(true);
-                setSearchParams({ signIn: "true" }); // optional sync
+                setSearchParams({ signIn: "true" });
               }}
             >
               Login
@@ -61,33 +68,37 @@ const Header = () => {
           </SignedOut>
 
           <SignedIn>
-            <Button variant="destructive" className="rounded-full">
-              <PenBox size={20} className="mr-2" />
-              Post a Job
-            </Button>
-            <Link to="/post-job"></Link>
+            {user?.unsafeMetadata?.role === "recruiter" && (
+              <Link to="/post-job">
+                <Button variant="destructive" className="rounded-full">
+                  <PenBox size={20} className="mr-2" />
+                  Post a Job
+                </Button>
+              </Link>
+            )}
+
             <UserButton
               appearance={{
                 elements: {
                   avatarBox: {
-                    width: "2.5rem", // Tailwind w-10 = 2.5rem
-                    height: "2.5rem", // Tailwind h-10 = 2.5rem
+                    width: "2.5rem",
+                    height: "2.5rem",
                   },
                 },
               }}
             >
-            <UserButton.MenuItems>
-              <UserButton.Link
-                label="My Jobs"
-                labelIcon={<Briefcase size={16} />}
-                href="/my-jobs"
-              />
-              <UserButton.Link
-                label="Saved Jobs"
-                labelIcon={<Heart size={16} />}
-                href="/saved-jobs"
-              />
-            </UserButton.MenuItems>
+              <UserButton.MenuItems>
+                <UserButton.Link
+                  label="My Jobs"
+                  labelIcon={<Briefcase size={16} />}
+                  href="/my-jobs"
+                />
+                <UserButton.Link
+                  label="Saved Jobs"
+                  labelIcon={<Heart size={16} />}
+                  href="/saved-jobs"
+                />
+              </UserButton.MenuItems>
             </UserButton>
           </SignedIn>
         </div>
