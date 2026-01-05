@@ -1,10 +1,5 @@
 import React from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "./card";
+import { Card, CardHeader, CardTitle, CardContent } from "./card";
 import { Trash2Icon, MapPinIcon } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 
@@ -23,40 +18,38 @@ const JobCard = ({
           {job.title}
 
           {isMyJob && (
-            <Trash2Icon
-              size={18}
-              className="text-red-500 cursor-pointer"
-            />
+            <Trash2Icon size={18} className="text-red-500 cursor-pointer" />
           )}
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="flex flex-col gap-4">
+      <CardContent className="flex flex-col gap-4 flex-1">
         {/* Company Logo */}
-        {job.company?.logo_url && (
-          <img
-            src={job.company.logo_url}
-            alt={job.company.name}
-            className="h-10 w-fit object-contain"
-          />
-        )}
-
-        {/* Location */}
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <MapPinIcon size={15} />
-          {job.location}
-        </div>
-
-        <hr />
-
-        {/* Short Description */}
-        <p className="text-sm text-gray-600">
-          {job.description.substring(
-            0,
-            job.description.indexOf(".") + 1
+        <div className="flex justify-center">
+          {job.company && (
+            <img
+              src={job.company.logo_url}
+              alt={job.company.name}
+              className="h-6 w-fit object-contain"
+            />
           )}
-        </p>
+
+          {/* Location */}
+          <div className="flex gap-2 items-center">
+            <MapPinIcon size={15} />
+            {job.location}
+          </div>
+        </div>
+        <hr />
+        {job.description.substring(0, job.description.indexOf(".") + 1)}
       </CardContent>
+      <CardFooter className="flex gap-2">
+        <Link to = {`/jobs/${job.id}`} className='flex-1'>
+          <Button variant="secondary">More Details</Button>
+        </Link>
+
+        <Heart size = {20} stroke = 'red' fill =  'red'/>
+       </CardFooter>
     </Card>
   );
 };
